@@ -1,5 +1,7 @@
+import Router from "./Router"
+
 const App: React.VFC = () => {
-  return <main></main>
+  return <Router />
 }
 
 export default App
