@@ -1,9 +1,8 @@
 import { Button, Card, Skeleton } from "antd"
-import axios from "axios"
 import { flatten } from "ramda"
 import { useInfiniteQuery } from "react-query"
 import { Link } from "react-router-dom"
-import { array, object, string } from "yup"
+import { fetchAssetCollection } from "../apis"
 import DefaultLayout from "../layouts/DefaultLayout"
 
 const ListPage: React.VFC = () => {
@@ -14,7 +13,7 @@ const ListPage: React.VFC = () => {
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useInfiniteQuery("assets", fetchAssets, {
+  } = useInfiniteQuery("assets", fetchAssetCollection, {
     getNextPageParam: (lastPages, pages) =>
       lastPages.length === 20 ? flatten(pages).length + 1 : undefined,
   })
@@ -60,37 +59,5 @@ const ListPage: React.VFC = () => {
 
   return <DefaultLayout>{content}</DefaultLayout>
 }
-
-const schema = array(
-  object({
-    id: string().required(),
-    token_id: string().required(),
-    image_url: string().required(),
-    name: string().required(),
-    asset_contract: object({
-      address: string().required(),
-    }).nullable(),
-  })
-).required()
-
-const fetchAssets = ({ pageParam = 0 }) =>
-  axios
-    .get(
-      `https://api.opensea.io/api/v1/assets?format=json&owner=0x960DE9907A2e2f5363646d48D7FB675Cd2892e91&limit=20&offset=${pageParam}`
-    )
-    .then((res) => schema.validate(res.data.assets))
-    .then((assets) => schema.cast(assets) || [])
-    .then((list) => {
-      return list.map((v) => ({
-        id: v.id || "",
-        imageUrl: v.image_url || "",
-        name: v.name || "",
-        assetContractAddress: v.asset_contract?.address || null,
-        tokenId: v.token_id || "",
-      }))
-    })
-    .catch((error) => {
-      throw new Error(error)
-    })
 
 export default ListPage
