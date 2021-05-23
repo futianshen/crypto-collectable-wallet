@@ -1,10 +1,10 @@
-import { LeftOutlined } from "@ant-design/icons"
 import { Button, Card, Skeleton } from "antd"
 import axios from "axios"
 import { pick } from "ramda"
 import { useQuery } from "react-query"
-import { Link, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { object, string } from "yup"
+import DetailLayout from "../layouts/DetailLayout"
 
 const DetailPage: React.VFC = () => {
   const { id } = useParams<{ id: string }>()
@@ -40,15 +40,9 @@ const DetailPage: React.VFC = () => {
   }
 
   return (
-    <main>
-      <header className="mb-3 p-3">
-        <Link to="/" className="inline-flex items-center mr-2">
-          <LeftOutlined />
-        </Link>
-        <span>{data?.collectionName}</span>
-      </header>
-      <section className="container mx-auto px-6">{content}</section>
-    </main>
+    <DetailLayout prevPath="/" name={data?.collectionName || ""}>
+      {content}
+    </DetailLayout>
   )
 }
 
