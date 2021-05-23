@@ -1,5 +1,6 @@
-import { Button, Card, Skeleton } from "antd"
+import { Card, Skeleton, Spin } from "antd"
 import { flatten } from "ramda"
+import { useEffect, useRef } from "react"
 import { useInfiniteQuery } from "react-query"
 import { Link } from "react-router-dom"
 import { fetchAssetCollection } from "../apis"
@@ -27,6 +28,26 @@ const ListPage: React.VFC = () => {
     content = <span>error</span>
   }
 
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!hasNextPage) {
+      return
+    }
+
+    const element = ref.current
+    if (!element) {
+      return
+    }
+
+    const observer = new IntersectionObserver((entries) =>
+      entries.forEach((v) => v.isIntersecting && fetchNextPage())
+    )
+    observer.observe(element)
+
+    return () => observer.unobserve(element)
+  }, [hasNextPage, ref.current])
+
   if (!!data) {
     content = (
       <>
@@ -42,16 +63,8 @@ const ListPage: React.VFC = () => {
             </Link>
           ))}
         </div>
-        <div>
-          {hasNextPage && (
-            <Button
-              onClick={() => fetchNextPage()}
-              loading={isFetchingNextPage}
-              block
-            >
-              Fetch More
-            </Button>
-          )}
+        <div ref={ref} className="text-center">
+          {isFetchingNextPage && <Spin />}
         </div>
       </>
     )
