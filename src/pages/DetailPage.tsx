@@ -24,11 +24,18 @@ const DetailPage: React.VFC = () => {
   if (!!data) {
     content = (
       <Card
-        cover={<img key={data.id} src={data.imgUrl} className="w-screen" />}
+        cover={
+          <img
+            key={data.id}
+            alt={data.id}
+            src={data.imgUrl}
+            className="w-screen"
+          />
+        }
         bordered={false}
       >
         <Card.Meta title={data.name} description={data.description} />
-        <a href={data.permalink} target="_blank">
+        <a href={data.permalink} target="_blank" rel="noreferrer">
           <Button className="mt-4" block>
             Link
           </Button>

@@ -1,11 +1,13 @@
 {
   "name": "crypto-collectable-wallet",
+  "homepage": "https://futianshen.github.io/crypto-collectable-wallet",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
     "antd": "^4.15.6",
     "axios": "^0.21.1",
+    "gh-pages": "^3.2.3",
     "ramda": "^0.27.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -25,6 +27,8 @@
     "@types/react-router-dom": "^5.1.7"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
